@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 class GenerateRepository extends GeneratorCommand
 {
     // El nombre del comando que ejecutarás en la consola
-    protected $signature = 'generate:repository {name}';
+    protected $signature = 'make:repository {name}';
 
     // La descripción del comando
     protected $description = 'Generate a repository class';
@@ -20,10 +20,8 @@ class GenerateRepository extends GeneratorCommand
     public function handle()
     {
         // Lógica del comando
-        $this->info('¡Comando ejecutado con éxito!');
-        $name = $this->normalizeClassName(
-            $this->argument('name')
-        );
+        $name = $this->argument('name');
+        $name = $this->normalizeClassName($name);
 
         $repositoryClassName = $name."Repository";
         Artisan::call('make:class Repositories/'.$repositoryClassName);
