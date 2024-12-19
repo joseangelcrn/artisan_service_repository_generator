@@ -81,6 +81,10 @@ class GeneratorCommand extends Command
                 $metaData['parent_dir'] = 'Repositories';
                 $metaData['suffix'] = 'Repository';
                 break;
+            case 'service':
+                $metaData['parent_dir'] = 'Services';
+                $metaData['suffix'] = 'Service';
+                break;
 
             default: return $metaData;
         }
