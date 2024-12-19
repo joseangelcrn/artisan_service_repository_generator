@@ -23,7 +23,19 @@ class GeneratorCommand extends Command
         return $className;
     }
 
-    protected function shouldOverrideIfExists($path, $additionalMessage){
+    protected function shouldOverrideIfExists($type, $options){
+        $metaData = $this->getMetaData($type);
+
+        if (!$metaData) return false;
+
+        $className = $options['class_name'];
+        $additionalMessage = $options['additional_message'];
+
+        $parentDir = $metaData['parent_dir'];
+        $suffix = $metaData['suffix'];
+
+        $path = app_path("$parentDir/$className$suffix.php");
+
         if (File::exists($path)){
             $shouldOverride =$this->ask("$additionalMessage, do you want override it ? [y/N]",false);
             if (!in_array(Str::lower($shouldOverride),['y','yes'])) {
@@ -31,6 +43,7 @@ class GeneratorCommand extends Command
                 return false;
             }
         }
+        File::delete($path);
         return true;
     }
 
@@ -38,17 +51,13 @@ class GeneratorCommand extends Command
 
         $className = $options['class_name'];
 
-        $parentDir = null;
-        $suffix = null;
+        $metaData = $this->getMetaData($type);
 
-        switch (Str::lower($type)){
-            case 'repository':
-                $parentDir = 'Repositories';
-                $suffix='Repository';
-                break;
-            default:
-                return false;
-        }
+        if (!$metaData) return false;
+
+        $parentDir = $metaData['parent_dir'];
+        $suffix = $metaData['suffix'];
+
 
         Artisan::call("make:class $parentDir/$className$suffix");
         $classContent = new ClassType($className.$suffix);
@@ -57,6 +66,23 @@ class GeneratorCommand extends Command
         file_put_contents($path,"<?php \n\n$classContent");
         return true;
 
+    }
+
+    private function getMetaData($type){
+
+        $metaData = null;
+
+        switch (Str::lower($type)){
+            case 'repository':
+                $metaData['parent_dir'] = 'Repositories';
+                $metaData['suffix'] = 'Repository';
+                break;
+
+            default: return $metaData;
+        }
+
+
+        return $metaData;
     }
 
 }

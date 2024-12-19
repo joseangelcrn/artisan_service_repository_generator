@@ -23,13 +23,16 @@ class GenerateRepository extends GeneratorCommand
         $name = $this->argument('name');
         $name = $this->normalizeClassName($name);
         $repositoryClassName = $name."Repository";
-        $filePath = app_path("Repositories/$repositoryClassName.php");
 
+        $shouldOverride = $this->shouldOverrideIfExists('repository',[
+            'class_name' => $name,
+            'additional_message' => "Repository already exists"
+        ]);
 
-        if (! $this->shouldOverrideIfExists($filePath,"Repository already exists")){
+        if (!$shouldOverride){
             return false;
         }
-        File::delete($filePath);
+
         $this->generateFile('repository',[
            'class_name'=>$name
         ]);
