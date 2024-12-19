@@ -1,0 +1,11 @@
+{
+    "name": "josanangel/service-repository-manager",
+    "description": "Descripción de tu paquete",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "josanangel\\ServiceRepositoryManager\\": "src/"
+        }
+    },
+    "require": {}
+}
