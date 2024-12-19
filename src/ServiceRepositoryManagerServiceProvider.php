@@ -4,6 +4,7 @@ namespace josanangel\ServiceRepositoryManager;
 
 use Illuminate\Support\ServiceProvider;
 use josanangel\ServiceRepositoryManager\Console\Commands\GenerateRepository;
+use josanangel\ServiceRepositoryManager\Console\Commands\GenerateService;
 
 class ServiceRepositoryManagerServiceProvider extends ServiceProvider
 {
@@ -11,7 +12,8 @@ class ServiceRepositoryManagerServiceProvider extends ServiceProvider
     {
         // Registra vistas, migraciones, rutas, etc.
         $this->commands([
-            GenerateRepository::class
+            GenerateRepository::class,
+            GenerateService::class
         ]);
     }
 
