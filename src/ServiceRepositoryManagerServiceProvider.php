@@ -3,7 +3,7 @@
 namespace josanangel\ServiceRepositoryManager;
 
 use Illuminate\Support\ServiceProvider;
-use josanangel\ServiceRepositoryManager\src\GenerateRepository;
+use josanangel\ServiceRepositoryManager\Console\Commands\GenerateRepository;
 
 class ServiceRepositoryManagerServiceProvider extends ServiceProvider
 {

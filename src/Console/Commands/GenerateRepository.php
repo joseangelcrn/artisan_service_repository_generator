@@ -1,6 +1,6 @@
 <?php
 
-namespace josanangel\ServiceRepositoryManager\src;
+namespace josanangel\ServiceRepositoryManager\Console\Commands;
 
 use Illuminate\Console\Command;
 
