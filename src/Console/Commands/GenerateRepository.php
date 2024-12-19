@@ -3,6 +3,7 @@
 namespace josanangel\ServiceRepositoryManager\Console\Commands;
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 
 class GenerateRepository extends GeneratorCommand
 {
@@ -19,12 +20,18 @@ class GenerateRepository extends GeneratorCommand
 
     public function handle()
     {
-        // Lógica del comando
         $name = $this->argument('name');
         $name = $this->normalizeClassName($name);
-
         $repositoryClassName = $name."Repository";
+        $filePath = app_path("Repositories/$repositoryClassName.php");
+
+
+        if (! $this->shouldOverrideIfExists($filePath,"Repository already exists")){
+            return false;
+        }
+        File::delete($filePath);
         Artisan::call('make:class Repositories/'.$repositoryClassName);
+        $this->info("Repository '$repositoryClassName' has been created successfully");
     }
 
 
