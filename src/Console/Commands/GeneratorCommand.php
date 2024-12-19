@@ -19,6 +19,7 @@ class GeneratorCommand extends Command
 
     protected function normalizeClassName($className){
         $className = Str::lower($className);
+        $className = Str::replace('repository','',$className);
         $className = Str::ucfirst($className);
         return $className;
     }
