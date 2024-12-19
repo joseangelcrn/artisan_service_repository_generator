@@ -7,5 +7,7 @@
             "josanangel\\ServiceRepositoryManager\\": "src/"
         }
     },
-    "require": {}
+    "require": {
+        "nette/php-generator": "^4.1"
+    }
 }
