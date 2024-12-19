@@ -30,7 +30,9 @@ class GenerateRepository extends GeneratorCommand
             return false;
         }
         File::delete($filePath);
-        Artisan::call('make:class Repositories/'.$repositoryClassName);
+        $this->generateFile('repository',[
+           'class_name'=>$name
+        ]);
         $this->info("Repository '$repositoryClassName' has been created successfully");
     }
 
