@@ -60,7 +60,11 @@ class GeneratorCommand extends Command
 
 
         Artisan::call("make:class $parentDir/$className$suffix");
+
         $classContent = new ClassType($className.$suffix);
+        $constructor = $classContent->addMethod('__construct')
+            ->setPublic();
+
         $path = app_path("$parentDir/$className$suffix.php");
 
         file_put_contents($path,"<?php \n\n$classContent");
