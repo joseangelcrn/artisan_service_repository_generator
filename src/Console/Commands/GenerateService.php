@@ -26,23 +26,13 @@ class GenerateService extends GeneratorCommand
         $name = $this->normalizeClassName($name);
         $serviceClassName = $name."Service";
 
-        $repositories = $this->option('repositories');
+        $repositories = $this->option('repositories',[]);
         $repositories = explode(',',$repositories);
         $repositories = collect($repositories);
+        $repositoryPaths = collect();
 
-        if ($repositories->isNotEmpty()){
-
-            $repositories = $repositories->map(function ($repository){
-                $path =  app_path("Repositories/$repository.php");
-                if (!File::exists($path)){
-                    $this->warn("Repository '$repository' doesnt exist, creating it");
-                    Artisan::call("make:repository" ,['name'=>$repository]);
-                }
-                return $path;
-            });
-
-
-
+        if ($repositories->filter()->isNotEmpty()){
+           $repositoryPaths = $this->generateRepositoriesIfNotExists($repositories);
         }
 
 //todo remove comments when tests finish
@@ -56,10 +46,27 @@ class GenerateService extends GeneratorCommand
 //        }
 
         $this->generateFile('service',[
-           'class_name'=>$name
+           'class_name'=>$name,
+           'repository_paths'=>$repositoryPaths
         ]);
         $this->info("Service '$serviceClassName' has been created successfully");
     }
 
+
+    private function generateRepositoriesIfNotExists($repositories){
+        $repositories = $repositories->map(function ($repository){
+            $repository = $this->normalizeClassName($repository);
+            $fileName = $repository."Repository.php";
+            $path =  app_path("Repositories/$fileName");
+            if (!File::exists($path)){
+                $this->warn("Repository '$repository' doesnt exist, creating it");
+                Artisan::call("make:repository" ,['name'=>$repository]);
+            }
+            //to use in code as string...
+            $relativePath = "App\\Repositories\\$fileName";
+            return $relativePath;
+        });
+        return $repositories;
+    }
 
 }

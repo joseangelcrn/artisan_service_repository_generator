@@ -89,6 +89,23 @@ class GeneratorCommand extends Command
 
         $path = app_path("$parentDir/$className$suffix.php");
 
+        if ($type === 'service'){
+            $repositoryPaths = $options['repository_paths'] ?? [];
+            foreach ($repositoryPaths as $filePath){
+                $filePathParts = explode('\\',$filePath);
+                $repositoryFile = str_replace('.php','',array_pop($filePathParts));
+                $varName =Str::camel($repositoryFile);
+
+                //property
+                $classContent->addProperty($varName)->setType($repositoryFile)->setProtected();
+                //param
+                $constructor->addParameter($varName)->setType($repositoryFile);
+                //set param to props
+                $constructor->addBody("\$this->$varName = \$$varName;");
+
+            }
+        }
+
         file_put_contents($path,"<?php \n\n$classContent");
         return true;
 
@@ -120,5 +137,18 @@ class GeneratorCommand extends Command
 
         return $metaData;
     }
+
+//    private function generateClassContent($type,$options){
+//        $classContent = new ClassType($className.$suffix);
+//        $constructor = $classContent->addMethod('__construct')
+//            ->setPublic();
+//
+//        $path = app_path("$parentDir/$className$suffix.php");
+//
+//        if ($type === 'service'){
+//            $repositories = $options['repositories'];
+//            echo 1;
+//        }
+//    }
 
 }
