@@ -16,14 +16,28 @@ class GeneratorCommand extends Command
     }
 
 
-
-    protected function normalizeClassName($className){
+    /**
+     * Normalize input className avoiding problematic nomenclatures
+     *
+     * @param $className
+     * @return string
+     */
+    protected function normalizeClassName($className) : String {
         $className = Str::lower($className);
         $className = Str::replace('repository','',$className);
+        $className = Str::replace('service','',$className);
         $className = Str::ucfirst($className);
         return $className;
     }
 
+    /**
+     *
+     * Check if new file already exists, if file does, a prompt will be displayed to ask if file should be overridden
+     *
+     * @param $type
+     * @param $options
+     * @return bool
+     */
     protected function shouldOverrideIfExists($type, $options){
         $metaData = $this->getMetaData($type);
 
@@ -48,6 +62,13 @@ class GeneratorCommand extends Command
         return true;
     }
 
+    /**
+     * Generate a file with all received specifications (Repository and Service case)
+     *
+     * @param $type
+     * @param $options
+     * @return bool
+     */
     protected function generateFile($type,$options){
 
         $className = $options['class_name'];
@@ -73,6 +94,12 @@ class GeneratorCommand extends Command
 
     }
 
+    /**
+     * Retrieve  according metadata for services and repositories
+     *
+     * @param $type
+     * @return array|null
+     */
     private function getMetaData($type){
 
         $metaData = null;
