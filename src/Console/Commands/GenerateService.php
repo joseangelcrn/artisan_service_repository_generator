@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 class GenerateService extends GeneratorCommand
 {
     // El nombre del comando que ejecutarás en la consola
-    protected $signature = 'make:service {name} {--repositories=}';
+    protected $signature = 'make:service {name} {--repositories=} {--services=}';
 
     // La descripción del comando
     protected $description = 'Generate a service class';
@@ -31,8 +31,17 @@ class GenerateService extends GeneratorCommand
         $repositories = collect($repositories);
         $repositoryPaths = collect();
 
+        $services = $this->option('services',[]);
+        $services = explode(',',$services);
+        $services = collect($services);
+        $servicePaths = collect();
+
         if ($repositories->filter()->isNotEmpty()){
            $repositoryPaths = $this->generateRepositoriesIfNotExists($repositories);
+        }
+
+        if ($services->filter()->isNotEmpty()){
+            $servicePaths = $this->generateServiceIfNotExists($services);
         }
 
 //todo remove comments when tests finish
@@ -47,7 +56,8 @@ class GenerateService extends GeneratorCommand
 
         $this->generateFile('service',[
            'class_name'=>$name,
-           'repository_paths'=>$repositoryPaths
+           'repository_paths'=>$repositoryPaths,
+            'service_paths'=>$servicePaths
         ]);
         $this->info("Service '$serviceClassName' has been created successfully");
     }
@@ -69,4 +79,19 @@ class GenerateService extends GeneratorCommand
         return $repositories;
     }
 
+    private function generateServiceIfNotExists($services){
+        $services = $services->map(function ($service){
+            $service = $this->normalizeClassName($service);
+            $fileName = $service."Service.php";
+            $path =  app_path("Services/$fileName");
+            if (!File::exists($path)){
+                $this->warn("Service '$service' doesnt exist, creating it");
+                Artisan::call("make:service" ,['name'=>$service]);
+            }
+            //to use in code as string...
+            $relativePath = "App\\Services\\$fileName";
+            return $relativePath;
+        });
+        return $services;
+    }
 }

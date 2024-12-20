@@ -98,6 +98,15 @@ class GeneratorCommand extends Command
                 $this->addParamToConstruct($classContent,$varName,$repositoryType);
 
             }
+            $servicePaths = $options['service_paths'] ?? [];
+            foreach ($servicePaths as $filePath){
+                $filePathParts = explode('\\',$filePath);
+                $serviceType = str_replace('.php','',array_pop($filePathParts));
+                $varName =Str::camel($serviceType);
+
+                $this->addParamToConstruct($classContent,$varName,$serviceType);
+
+            }
         }
 
         file_put_contents($path,"<?php \n\n$classContent");
