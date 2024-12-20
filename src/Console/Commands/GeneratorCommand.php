@@ -84,8 +84,7 @@ class GeneratorCommand extends Command
         Artisan::call("make:class $parentDir/$className$suffix");
 
         $classContent = new ClassType($className.$suffix);
-        $constructor = $classContent->addMethod('__construct')
-            ->setPublic();
+        $classContent->addMethod('__construct')->setPublic();
 
         $path = app_path("$parentDir/$className$suffix.php");
 
@@ -93,15 +92,10 @@ class GeneratorCommand extends Command
             $repositoryPaths = $options['repository_paths'] ?? [];
             foreach ($repositoryPaths as $filePath){
                 $filePathParts = explode('\\',$filePath);
-                $repositoryFile = str_replace('.php','',array_pop($filePathParts));
-                $varName =Str::camel($repositoryFile);
+                $repositoryType = str_replace('.php','',array_pop($filePathParts));
+                $varName =Str::camel($repositoryType);
 
-                //property
-                $classContent->addProperty($varName)->setType($repositoryFile)->setProtected();
-                //param
-                $constructor->addParameter($varName)->setType($repositoryFile);
-                //set param to props
-                $constructor->addBody("\$this->$varName = \$$varName;");
+                $this->addParamToConstruct($classContent,$varName,$repositoryType);
 
             }
         }
@@ -151,4 +145,17 @@ class GeneratorCommand extends Command
 //        }
 //    }
 
+
+    private function addParamToConstruct($classContent, $varName,$type): void
+    {
+
+        $constructor = $classContent->getMethod('__construct');
+
+        //property
+        $classContent->addProperty($varName)->setType($type)->setProtected();
+        //param
+        $constructor->addParameter($varName)->setType($type);
+        //set param to props
+        $constructor->addBody("\$this->$varName = \$$varName;");
+    }
 }
