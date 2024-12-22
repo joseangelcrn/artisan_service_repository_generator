@@ -23,13 +23,36 @@ trait ClassBuilder
     {
         return $this->classContent->addMethod('__construct')->setPublic();
     }
+
+    /**
+     * @param $varName
+     * @param $type
+     * @param string $scope
+     * @return void
+     * @throws \Exception
+     *
+     * Add new property to class
+     */
+    protected function addPropertyToClass($varName, $type, string $scope = 'protected'): void
+    {
+        if (!in_array($scope,['protected','private','public'])){
+            throw new \Exception("inserted scope is not available ('$scope')");
+        }
+        $this->classContent->addProperty($varName)->setType($type)->setProtected();
+    }
+
+    /**
+     * @param $varName
+     * @param $type
+     * @return void
+     *
+     * Add new param to construct
+     */
     protected function addParamToConstruct( $varName,$type): void
     {
 
         $constructor = $this->getConstructor();
 
-        //property
-        $this->classContent->addProperty($varName)->setType($type)->setProtected();
         //param
         $constructor->addParameter($varName)->setType($type);
         //set param to props

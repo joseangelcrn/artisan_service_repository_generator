@@ -62,7 +62,10 @@ class GenerateService extends GeneratorCommand
         $this->info("Service '$serviceClassName' has been created successfully");
     }
 
-   protected function generateFile($type,$options)
+    /**
+     * @throws \Exception
+     */
+    protected function generateFile($type, $options)
    {
        $options['save_file'] = false;
 
@@ -72,6 +75,7 @@ class GenerateService extends GeneratorCommand
        foreach ($repositoryPaths as $filePath){
 
            [$varName,$type] = $this->normalizeParamFromFilePath($filePath);
+           $this->addPropertyToClass($varName,$type,'public');
            $this->addParamToConstruct($varName,$type);
 
        }
@@ -80,6 +84,7 @@ class GenerateService extends GeneratorCommand
        foreach ($servicePaths as $filePath){
 
            [$varName,$type] = $this->normalizeParamFromFilePath($filePath);
+           $this->addPropertyToClass($varName,$type);
            $this->addParamToConstruct($varName,$type);
 
        }
