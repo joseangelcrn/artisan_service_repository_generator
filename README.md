@@ -17,6 +17,8 @@ This package provides artisan commands to easily generate **Services** and **Rep
 - PHP >= 8.3
 - Laravel >= 11
 - Composer
+- nette/php-generator >= 4.1
+
 
 ## Installation
 
