@@ -54,7 +54,7 @@ class GenerateService extends GeneratorCommand
 //            return false;
 //        }
 
-        $this->generateFile('service',[
+        $this-> generateFile('service',[
            'class_name'=>$name,
            'repository_paths'=>$repositoryPaths,
             'service_paths'=>$servicePaths
