@@ -22,12 +22,29 @@ This package provides artisan commands to easily generate **Services** and **Rep
 
 ## Installation
 
-Install the package via Composer:
+### Install the package via Composer:
 
 ```bash
 composer require josanangel/service-repository-manager:dev-master
 ```
 
+## After install
+
+### Add package provider in ``bootstrap/providers.php``:
+
+````php
+
+<?php
+
+return [
+     ...,
+     josanangel\ServiceRepositoryManager\ServiceRepositoryManagerServiceProvider::class,
+];
+````
+### Execute ``composer dump-auto``
+
+<hr>
+<hr>
 
 ## Examples
 
