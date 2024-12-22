@@ -32,7 +32,7 @@ composer require josanangel/service-repository-manager:dev-master
 
 ## After install
 
-### Add package provider in ``bootstrap/providers.php``:
+### Add this line to  ``bootstrap/providers.php`` file:
 
 ````php
 
@@ -43,7 +43,11 @@ return [
      josanangel\ServiceRepositoryManager\ServiceRepositoryManagerServiceProvider::class,
 ];
 ````
-### Execute ``composer dump-auto``
+### Execute composer dump-autoload after that:
+
+```bash
+composer dump-auto
+```
 
 <hr>
 <hr>
