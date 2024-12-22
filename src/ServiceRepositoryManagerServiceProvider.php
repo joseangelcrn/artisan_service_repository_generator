@@ -13,7 +13,7 @@ class ServiceRepositoryManagerServiceProvider extends ServiceProvider
         // Registra vistas, migraciones, rutas, etc.
         $this->commands([
             GenerateRepository::class,
-            GenerateService::class
+            GenerateService::class,
         ]);
     }
 

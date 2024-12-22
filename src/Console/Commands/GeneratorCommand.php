@@ -6,29 +6,27 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use josanangel\ServiceRepositoryManager\Console\Commands\Traits\ClassBuilder;
+use josanangel\ServiceRepositoryManager\Console\Commands\Traits\FileHelper;
+use josanangel\ServiceRepositoryManager\Console\Commands\Traits\Normalizer;
 use Nette\PhpGenerator\ClassType;
 
 class GeneratorCommand extends Command
 {
+
+    use ClassBuilder,
+        Normalizer,
+        FileHelper
+        ;
+
+
     public function __construct()
     {
         parent::__construct();
     }
 
 
-    /**
-     * Normalize input className avoiding problematic nomenclatures
-     *
-     * @param $className
-     * @return string
-     */
-    protected function normalizeClassName($className) : String {
-        $className = Str::lower($className);
-        $className = Str::replace('repository','',$className);
-        $className = Str::replace('service','',$className);
-        $className = Str::ucfirst($className);
-        return $className;
-    }
+
 
     /**
      *
@@ -67,11 +65,12 @@ class GeneratorCommand extends Command
      *
      * @param $type
      * @param $options
-     * @return bool
+     * @return array
      */
     protected function generateFile($type,$options){
 
         $className = $options['class_name'];
+        $saveFile = $options['save_file'] ?? true;
 
         $metaData = $this->getMetaData($type);
 
@@ -80,37 +79,21 @@ class GeneratorCommand extends Command
         $parentDir = $metaData['parent_dir'];
         $suffix = $metaData['suffix'];
 
+        $this->generateTempFile($parentDir,$className,$suffix);
 
-        Artisan::call("make:class $parentDir/$className$suffix");
+        $this->instanceClassBuilder($className,$suffix);
 
-        $classContent = new ClassType($className.$suffix);
-        $classContent->addMethod('__construct')->setPublic();
+        $this->generateConstruct();
 
-        $path = app_path("$parentDir/$className$suffix.php");
+        $path = $this->getFilePath($parentDir,$className,$suffix);
 
-        if ($type === 'service'){
-            $repositoryPaths = $options['repository_paths'] ?? [];
-            foreach ($repositoryPaths as $filePath){
-                $filePathParts = explode('\\',$filePath);
-                $repositoryType = str_replace('.php','',array_pop($filePathParts));
-                $varName =Str::camel($repositoryType);
-
-                $this->addParamToConstruct($classContent,$varName,$repositoryType);
-
-            }
-            $servicePaths = $options['service_paths'] ?? [];
-            foreach ($servicePaths as $filePath){
-                $filePathParts = explode('\\',$filePath);
-                $serviceType = str_replace('.php','',array_pop($filePathParts));
-                $varName =Str::camel($serviceType);
-
-                $this->addParamToConstruct($classContent,$varName,$serviceType);
-
-            }
+        if ($saveFile){
+            $this->storeFile($path);
         }
 
-        file_put_contents($path,"<?php \n\n$classContent");
-        return true;
+        return [
+            'path'=> $path
+        ];
 
     }
 
@@ -141,30 +124,4 @@ class GeneratorCommand extends Command
         return $metaData;
     }
 
-//    private function generateClassContent($type,$options){
-//        $classContent = new ClassType($className.$suffix);
-//        $constructor = $classContent->addMethod('__construct')
-//            ->setPublic();
-//
-//        $path = app_path("$parentDir/$className$suffix.php");
-//
-//        if ($type === 'service'){
-//            $repositories = $options['repositories'];
-//            echo 1;
-//        }
-//    }
-
-
-    private function addParamToConstruct($classContent, $varName,$type): void
-    {
-
-        $constructor = $classContent->getMethod('__construct');
-
-        //property
-        $classContent->addProperty($varName)->setType($type)->setProtected();
-        //param
-        $constructor->addParameter($varName)->setType($type);
-        //set param to props
-        $constructor->addBody("\$this->$varName = \$$varName;");
-    }
 }
