@@ -72,12 +72,12 @@ class UserService
 
 ### Create a UserService file with injected dependencies
 
-#### UserService + _injected_ AuthService
+#### UserService + [ _injected_ ] AuthService
 
 ```bash
 php artisan make:service User --services=auth
 ```
-### Output
+#### Output
 
 ````php
 <?php 
@@ -107,7 +107,7 @@ class AuthService
 ````
 <hr>
 
-#### UserService + _injected_ AuthService + _injected_ MapService + _injected_ UserRepository
+#### UserService + [ _injected_ ] AuthService + [ _injected_ ] MapService + [ _injected_ ] UserRepository
 
 ```bash
 php artisan make:service User --services=auth,map --repositories=auth
