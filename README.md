@@ -14,8 +14,8 @@ This package provides artisan commands to easily generate **Services** and **Rep
 
 ## Requirements
 
-- PHP >= 7.4
-- Laravel >= 8.0
+- PHP >= 8.3
+- Laravel >= 11
 - Composer
 
 ## Installation
