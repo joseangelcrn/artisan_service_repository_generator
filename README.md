@@ -25,7 +25,7 @@ This package provides artisan commands to easily generate **Services** and **Rep
 Install the package via Composer:
 
 ```bash
-composer require vendor/service-repository-generator
+composer require josanangel/service-repository-manager:dev-master
 ```
 
 
