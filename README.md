@@ -24,3 +24,146 @@ Install the package via Composer:
 
 ```bash
 composer require vendor/service-repository-generator
+```
+
+
+## Examples
+
+### Create a UserRepository file
+
+```bash
+php artisan make:repository User
+```
+### Content
+
+````php
+<?php 
+
+class UserRepository
+{
+	public function __construct()
+	{
+	}
+}
+````
+
+<hr>
+
+### Create a UserService file
+
+```bash
+php artisan make:service User
+```
+### Output
+
+````php
+<?php 
+
+class UserService
+{
+	public function __construct()
+	{
+	}
+}
+
+````
+
+<hr>
+
+### Create a UserService file with injected dependencies
+
+#### UserService + _injected_ AuthService
+
+```bash
+php artisan make:service User --services=auth
+```
+### Output
+
+````php
+<?php 
+
+class UserService
+{
+	protected AuthService $authService;
+
+
+	public function __construct(AuthService $authService)
+	{
+		$this->authService = $authService;
+	}
+}
+
+````
+````php
+<?php 
+
+class AuthService
+{
+	public function __construct()
+	{
+	}
+}
+
+````
+<hr>
+
+#### UserService + _injected_ AuthService + _injected_ MapService + _injected_ UserRepository
+
+```bash
+php artisan make:service User --services=auth,map --repositories=auth
+```
+### Output
+
+````php
+<?php 
+
+class AuthRepository
+{
+	public function __construct()
+	{
+	}
+}
+
+````
+````php
+<?php 
+
+class AuthService
+{
+	public function __construct()
+	{
+	}
+}
+
+````
+
+````php
+<?php 
+
+class MapService
+{
+	public function __construct()
+	{
+	}
+}
+
+````
+````php
+<?php 
+
+class UserService
+{
+	protected AuthRepository $authRepository;
+	protected AuthService $authService;
+	protected MapService $mapService;
+
+
+	public function __construct(AuthRepository $authRepository, AuthService $authService, MapService $mapService)
+	{
+		$this->authRepository = $authRepository;
+		$this->authService = $authService;
+		$this->mapService = $mapService;
+	}
+}
+
+````
