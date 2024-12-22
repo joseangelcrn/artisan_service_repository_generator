@@ -2,6 +2,7 @@
     "name": "josanangel/service-repository-manager",
     "description": "Service Repository Pattern Creator",
     "type": "library",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "josanangel\\ServiceRepositoryManager\\": "src/"
