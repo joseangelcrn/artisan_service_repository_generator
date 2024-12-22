@@ -19,6 +19,8 @@ This package provides artisan commands to easily generate **Services** and **Rep
 - Composer
 - nette/php-generator >= 4.1
 
+## Packagist Page
+https://packagist.org/packages/josanangel/service-repository-manager
 
 ## Installation
 
