@@ -8,6 +8,11 @@
             "josanangel\\ServiceRepositoryManager\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "josanangel\\tests\\": "tests/"
+        }
+    },
     "require": {
         "nette/php-generator": "^4.1"
     },
