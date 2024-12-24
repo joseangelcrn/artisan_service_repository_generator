@@ -4,7 +4,9 @@ namespace josanangel\ServiceRepositoryManager;
 
 use Illuminate\Support\ServiceProvider;
 use josanangel\ServiceRepositoryManager\Console\Commands\GenerateRepository;
+use josanangel\ServiceRepositoryManager\Console\Commands\GenerateRepositoryV2;
 use josanangel\ServiceRepositoryManager\Console\Commands\GenerateService;
+use josanangel\ServiceRepositoryManager\Console\Commands\GenerateServiceV2;
 
 class ServiceRepositoryManagerServiceProvider extends ServiceProvider
 {
@@ -14,6 +16,9 @@ class ServiceRepositoryManagerServiceProvider extends ServiceProvider
         $this->commands([
             GenerateRepository::class,
             GenerateService::class,
+
+            GenerateRepositoryV2::class,
+            GenerateServiceV2::class
         ]);
     }
 
