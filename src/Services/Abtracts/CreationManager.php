@@ -2,29 +2,56 @@
 
 namespace josanangel\ServiceRepositoryManager\Services\Abtracts;
 
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
+use josanangel\ServiceRepositoryManager\Interfaces\CreationManagerActions;
 use Nette\PhpGenerator\ClassType;
+use stdClass;
 
-abstract class CreationManager
+abstract class CreationManager implements CreationManagerActions
 {
     protected $rawClassName;
     protected $normalizedClassName;
-    protected $parentDir;
+
+    protected $attributes;
+    protected $constructorParams;
+
     protected $suffix;
 
     protected $classBuilder;
 
+    protected $path;
 
 
-    public function __construct($className)
+    public function __construct(string $rawClassName)
     {
-        $this->rawClassName = $className;
+
+        $this->attributes = collect();
+        $this->constructorParams = collect();
+
+
+        $this->rawClassName = $rawClassName;
         $this->normalizeClassName();
+        $this->instanceClassBuilder();
+        $this->generateConstructor();
     }
 
+     function generateConstructor()
+    {
+        $this->classBuilder->addMethod('__construct')->setPublic();
+    }
 
-    protected function normalizeClassName(){
+    protected function getConstruct()
+    {
+        return $this->classBuilder->getMethod('__construct');
+    }
+
+    function instanceClassBuilder()
+    {
+        $this->classBuilder =  new ClassType($this->normalizedClassName);
+    }
+
+    function normalizeClassName()
+    {
 
         $className = Str::lower($this->rawClassName);
         $className = Str::replace('repository','',$className);
@@ -35,130 +62,64 @@ abstract class CreationManager
         $this->applySuffix();
     }
 
-    protected function normalizeParamFromFilePath($path)
+    function applySuffix()
     {
-        $filePathParts = explode('\\',$path);
-        $type = str_replace('.php','',array_pop($filePathParts));
-        $varName =Str::camel($type);
-
-        return [
-            $varName,
-            $type
-        ];
-    }
-    protected function applySuffix()
-    {
-        $this->normalizedClassName = $this->normalizedClassName.$this->getSuffix();
-    }
-
-    protected function generateFile($saveFile = true)
-    {
-        $this->generateTempFile();
-        $this->instanceClassBuilder();
-        $this->generateConstruct();
-
-        if ($saveFile){
-            $this->storeFile();
+        if ($this->suffix){
+            $this->normalizedClassName .=$this->suffix;
         }
+    }
 
+    function addAttributeToClass($varName,$varType)
+    {
+        $newAttribute = new StdClass();
+        $newAttribute->name = $varName;
+        $newAttribute->type = $varType;
+
+        $this->attributes->push($newAttribute);
+    }
+
+    function addParamToConstructor($varName,$varType)
+    {
+        $newParam = new StdClass();
+        $newParam->name = $varName;
+        $newParam->type = $varType;
+
+        $this->constructorParams->push($newParam);
     }
 
 
-    protected function generateTempFile()
+    function setConstructorParamsToAttributes()
     {
-        $parentDir = $this->getParentDir();
-        $normalizedClassName = $this->getNormalizedClassName();
-        Artisan::call("make:class $parentDir/$normalizedClassName");
-    }
+        $constructor = $this->getConstruct();
 
-    protected function storeFile()
-    {
-        $path = $this->getFilePath();
-        $classBuilder = $this->getClassBuilder();
+        foreach ($this->attributes as $index=>$attribute){
+            $param = $this->constructorParams->get($index);
 
-        file_put_contents($path,"<?php \n\n$classBuilder");
+            //Generate class attribute
+            if ($attribute->name){
+                $this->classBuilder->addProperty($attribute->name)->setType($attribute->type)->setProtected();
+            }
 
-    }
-    /**
-     * Class Builder
-     */
-    //todo... adapt ClassBuilder trait
+            //Generate constructor param
+            if ($param){
+                $constructor->addParameter($param->name)->setType($param->type);
+            }
 
-    protected function instanceClassBuilder()
-    {
-        $normalizedClassName = $this->getNormalizedClassName();
-        $this->classBuilder =  new ClassType($normalizedClassName);
-    }
-    protected function generateConstruct()
-    {
-        return $this->getClassBuilder()->addMethod('__construct')->setPublic();
-    }
-    protected function addPropertyToClass($varName,string $type,$scope)
-    {
-        $allowedScopes = ['protected','private','public'];
-        if (!in_array($scope,$allowedScopes)){
-            throw new \Exception("Inserted scope is not available ('$scope'), allowed scopes = ".implode(',',$allowedScopes));
+            //Set property to param
+            if ($attribute->name and $param){
+                $attributeName = $attribute->name;
+                $paramName = $param->name;
+                $constructor->addBody("\$this->$attributeName = $paramName;");
+            }
+
         }
-
-
-        //todo.. apply scope later..
-        $this->getClassBuilder()->addProperty($varName)->setType($type)->setProtected();
     }
 
-    protected function addParamToConstruct($paramName,$type,$attributeName = null)
+    function generateFile()
     {
-        if (!$attributeName){
-            $attributeName = $paramName;
-        }
-
-        $constructor = $this->getConstructor();
-
-        //param
-        $constructor->addParameter($paramName)->setType($type);
-
-        //set param to attribute
-        $constructor->addBody("\$this->$attributeName = \$$paramName;");
-    }
-    protected function getConstructor()
-    {
-        return $this->getClassBuilder()->getMethod('__construct');
+        $path = app_path($this->parentDir.'/'.$this->normalizedClassName.".php");
+        file_put_contents($path,"<?php \n\n$this->classBuilder");
     }
 
-
-    protected function getClassBuilder()
-    {
-        return $this->classBuilder;
-    }
-
-
-    /**
-     * Getters
-     */
-
-    protected function getSuffix()
-    {
-        return $this->suffix;
-    }
-
-    protected function getParentDir()
-    {
-        return $this->parentDir;
-    }
-
-    protected function getNormalizedClassName()
-    {
-        if (!$this->normalizedClassName){
-            $this->normalizeClassName();
-        }
-
-        return $this->normalizedClassName;
-    }
-
-
-    protected function getFilePath()
-    {
-        $parentDir = $this->getParentDir();
-        $normalizedClassName = $this->getNormalizedClassName();
-        return app_path("$parentDir/$normalizedClassName.php");
-    }
 }
+

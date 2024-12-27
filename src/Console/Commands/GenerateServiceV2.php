@@ -43,34 +43,4 @@ class GenerateServiceV2 extends GeneratorCommand
 
         $this->info('Generate service v2');
     }
-
-    /**
-     * @throws \Exception
-     */
-    protected function generateFile($type, $options)
-   {
-       $options['save_file'] = false;
-
-       $metaData = parent::generateFile($type,$options);
-
-       $repositoryPaths = $options['repository_paths'] ?? [];
-       foreach ($repositoryPaths as $filePath){
-
-           [$varName,$type] = $this->normalizeParamFromFilePath($filePath);
-           $this->addPropertyToClass($varName,$type,'public');
-           $this->addParamToConstruct($varName,$type);
-
-       }
-
-       $servicePaths = $options['service_paths'] ?? [];
-       foreach ($servicePaths as $filePath){
-
-           [$varName,$type] = $this->normalizeParamFromFilePath($filePath);
-           $this->addPropertyToClass($varName,$type);
-           $this->addParamToConstruct($varName,$type);
-
-       }
-
-       $this->storeFile($metaData['path']);
-   }
 }

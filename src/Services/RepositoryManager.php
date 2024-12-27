@@ -7,15 +7,20 @@ use josanangel\ServiceRepositoryManager\Services\Abtracts\CreationManager;
 class RepositoryManager extends CreationManager
 {
 
-    public function __construct($className)
+    public function __construct($rawClassName)
     {
-        parent::__construct($className);
         $this->parentDir = 'Repositories';
         $this->suffix = 'Repository';
+        parent::__construct($rawClassName);
+
     }
 
     public function run()
     {
+        $this->setConstructorParamsToAttributes();
         $this->generateFile();
     }
+
+
+
 }
