@@ -2,6 +2,8 @@
 
 This package provides artisan commands to easily generate **Services** and **Repositories**, following the **Service-Repository Pattern**, which are not natively supported in Laravel. It helps developers maintain a clean and scalable code structure.
 
+The code is designed so that any developer can build upon it, as it follows best practices and clean code principles.
+
 ![Descripción de la imagen](https://i.ibb.co/XtzQRsJ/Pizarra-Mapa-de-Web-Lluvia-de-Ideas-Negro-Naranja-Moderno-Profesional.png)
 
 
