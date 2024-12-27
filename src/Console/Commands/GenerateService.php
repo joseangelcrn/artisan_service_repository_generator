@@ -4,13 +4,15 @@ namespace josanangel\ServiceRepositoryManager\Console\Commands;
 
 
 use josanangel\ServiceRepositoryManager\Console\Commands\Traits\AuxGenerator;
+use josanangel\ServiceRepositoryManager\Services\RepositoryManager;
+use josanangel\ServiceRepositoryManager\Services\ServiceManager;
 
 class GenerateService extends GeneratorCommand
 {
     use AuxGenerator;
 
     // El nombre del comando que ejecutarás en la consola
-    protected $signature = 'make:service {name} {--repositories=} {--services=}';
+    protected $signature = 'make:servicev2 {name} {--repositories=} {--services=}';
 
     // La descripción del comando
     protected $description = 'Generate a service class';
@@ -23,72 +25,52 @@ class GenerateService extends GeneratorCommand
     public function handle()
     {
         $name = $this->argument('name');
-        $name = $this->normalizeClassName($name);
-        $serviceClassName = $name."Service";
 
         $repositories = $this->option('repositories',[]);
         $repositories = explode(',',$repositories);
         $repositories = collect($repositories);
-        $repositoryPaths = collect();
+        $repositories = $repositories->filter();
+
 
         $services = $this->option('services',[]);
         $services = explode(',',$services);
         $services = collect($services);
-        $servicePaths = collect();
+        $services = $services->filter();
 
-        if ($repositories->filter()->isNotEmpty()){
-           $repositoryPaths = $this->generateRepositoriesIfNotExists($repositories);
+        $serviceManager = new ServiceManager($name);
+
+        foreach ($repositories as $repository){
+            $repositoryManager = new RepositoryManager($repository);
+            $repositoryManager->run();
+
+            $serviceManager->addAttributeToClass(
+                $repositoryManager->getVariable(),
+                $repositoryManager->getType()
+            );
+
+            $serviceManager->addParamToConstructor(
+                $repositoryManager->getVariable(),
+                $repositoryManager->getType()
+            );
         }
 
-        if ($services->filter()->isNotEmpty()){
-            $servicePaths = $this->generateServiceIfNotExists($services);
+        foreach ($services as $service){
+            $auxServiceManager = new ServiceManager($service);
+            $auxServiceManager->run();
+
+            $serviceManager->addAttributeToClass(
+                $auxServiceManager->getVariable(),
+                $auxServiceManager->getType()
+            );
+
+            $serviceManager->addParamToConstructor(
+                $auxServiceManager->getVariable(),
+                $auxServiceManager->getType()
+            );
         }
 
-//todo remove comments when tests finish
-//        $shouldOverride = $this->shouldOverrideIfExists('service',[
-//            'class_name' => $name,
-//            'additional_message' => "Service already exists"
-//        ]);
-//
-//        if (!$shouldOverride){
-//            return false;
-//        }
+        $serviceManager->run();
 
-        $this-> generateFile('service',[
-           'class_name'=>$name,
-           'repository_paths'=>$repositoryPaths,
-            'service_paths'=>$servicePaths
-        ]);
-        $this->info("Service '$serviceClassName' has been created successfully");
+        $this->info('Generate service v2');
     }
-
-    /**
-     * @throws \Exception
-     */
-    protected function generateFile($type, $options)
-   {
-       $options['save_file'] = false;
-
-       $metaData = parent::generateFile($type,$options);
-
-       $repositoryPaths = $options['repository_paths'] ?? [];
-       foreach ($repositoryPaths as $filePath){
-
-           [$varName,$type] = $this->normalizeParamFromFilePath($filePath);
-           $this->addPropertyToClass($varName,$type,'public');
-           $this->addParamToConstruct($varName,$type);
-
-       }
-
-       $servicePaths = $options['service_paths'] ?? [];
-       foreach ($servicePaths as $filePath){
-
-           [$varName,$type] = $this->normalizeParamFromFilePath($filePath);
-           $this->addPropertyToClass($varName,$type);
-           $this->addParamToConstruct($varName,$type);
-
-       }
-
-       $this->storeFile($metaData['path']);
-   }
 }

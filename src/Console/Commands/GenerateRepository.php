@@ -2,13 +2,12 @@
 
 namespace josanangel\ServiceRepositoryManager\Console\Commands;
 
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\File;
+use josanangel\ServiceRepositoryManager\Services\RepositoryManager;
 
 class GenerateRepository extends GeneratorCommand
 {
     // El nombre del comando que ejecutarás en la consola
-    protected $signature = 'make:repository {name}';
+    protected $signature = 'make:repositoryv2 {name}';
 
     // La descripción del comando
     protected $description = 'Generate a repository class';
@@ -21,22 +20,11 @@ class GenerateRepository extends GeneratorCommand
     public function handle()
     {
         $name = $this->argument('name');
-        $name = $this->normalizeClassName($name);
-        $repositoryClassName = $name."Repository";
 
-        $shouldOverride = $this->shouldOverrideIfExists('repository',[
-            'class_name' => $name,
-            'additional_message' => "Repository already exists"
-        ]);
+        $repositoryManager = new RepositoryManager($name);
+        $repositoryManager->run();
 
-        if (!$shouldOverride){
-            return false;
-        }
-
-        $this->generateFile('repository',[
-           'class_name'=>$name
-        ]);
-        $this->info("Repository '$repositoryClassName' has been created successfully");
+        $this->info('Generate repository v2');
     }
 
 
