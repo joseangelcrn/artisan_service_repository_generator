@@ -4,6 +4,7 @@ namespace josanangel\ServiceRepositoryManager\Console\Commands;
 
 
 use josanangel\ServiceRepositoryManager\Console\Commands\Traits\AuxGenerator;
+use josanangel\ServiceRepositoryManager\Services\RepositoryManager;
 use josanangel\ServiceRepositoryManager\Services\ServiceManager;
 
 class GenerateServiceV2 extends GeneratorCommand
@@ -37,8 +38,37 @@ class GenerateServiceV2 extends GeneratorCommand
         $services = $services->filter();
 
         $serviceManager = new ServiceManager($name);
-        $serviceManager->addRepositoriesAsDependencies($repositories);
-        $serviceManager->addServicesAsDependencies($services);
+
+        foreach ($repositories as $repository){
+            $repositoryManager = new RepositoryManager($repository);
+            $repositoryManager->run();
+
+            $serviceManager->addAttributeToClass(
+                $repositoryManager->getVariable(),
+                $repositoryManager->getType()
+            );
+
+            $serviceManager->addParamToConstructor(
+                $repositoryManager->getVariable(),
+                $repositoryManager->getType()
+            );
+        }
+
+        foreach ($services as $service){
+            $auxServiceManager = new ServiceManager($service);
+            $auxServiceManager->run();
+
+            $serviceManager->addAttributeToClass(
+                $auxServiceManager->getVariable(),
+                $auxServiceManager->getType()
+            );
+
+            $serviceManager->addParamToConstructor(
+                $auxServiceManager->getVariable(),
+                $auxServiceManager->getType()
+            );
+        }
+
         $serviceManager->run();
 
         $this->info('Generate service v2');

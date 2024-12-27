@@ -21,6 +21,8 @@ abstract class CreationManager implements CreationManagerActions
 
     protected $path;
 
+    protected $parentDir;
+
 
     public function __construct(string $rawClassName)
     {
@@ -40,10 +42,6 @@ abstract class CreationManager implements CreationManagerActions
         $this->classBuilder->addMethod('__construct')->setPublic();
     }
 
-    protected function getConstruct()
-    {
-        return $this->classBuilder->getMethod('__construct');
-    }
 
     function instanceClassBuilder()
     {
@@ -88,7 +86,7 @@ abstract class CreationManager implements CreationManagerActions
     }
 
 
-    function setConstructorParamsToAttributes()
+    function resolveVariables()
     {
         $constructor = $this->getConstruct();
 
@@ -109,7 +107,7 @@ abstract class CreationManager implements CreationManagerActions
             if ($attribute->name and $param){
                 $attributeName = $attribute->name;
                 $paramName = $param->name;
-                $constructor->addBody("\$this->$attributeName = $paramName;");
+                $constructor->addBody("\$this->$attributeName = \$$paramName;");
             }
 
         }
@@ -121,5 +119,19 @@ abstract class CreationManager implements CreationManagerActions
         file_put_contents($path,"<?php \n\n$this->classBuilder");
     }
 
+
+    protected function getConstruct()
+    {
+        return $this->classBuilder->getMethod('__construct');
+    }
+
+    public function getVariable()
+    {
+        return Str::camel($this->normalizedClassName);
+    }
+    public function getType()
+    {
+        return Str::ucfirst(Str::camel($this->normalizedClassName));
+    }
 }
 

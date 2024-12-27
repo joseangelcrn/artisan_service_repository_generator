@@ -4,13 +4,13 @@ namespace josanangel\ServiceRepositoryManager\Services;
 
 use josanangel\ServiceRepositoryManager\Services\Abtracts\CreationManager;
 
-class RepositoryManager extends CreationManager
+class ServiceManager extends CreationManager
 {
 
     public function __construct($rawClassName)
     {
-        $this->parentDir = 'Repositories';
-        $this->suffix = 'Repository';
+        $this->parentDir = 'Services';
+        $this->suffix = 'Service';
         parent::__construct($rawClassName);
 
     }
@@ -19,6 +19,7 @@ class RepositoryManager extends CreationManager
     {
         $this->resolveVariables();
         $this->generateFile();
+
     }
 
 

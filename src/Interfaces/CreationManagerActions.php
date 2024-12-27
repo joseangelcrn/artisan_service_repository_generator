@@ -8,7 +8,7 @@ interface CreationManagerActions
     function normalizeClassName();
     function generateFile();
     function generateConstructor();
-    function setConstructorParamsToAttributes();
+    function resolveVariables();
     function addAttributeToClass($varName,$varType);
     function addParamToConstructor($varName,$varType);
 
