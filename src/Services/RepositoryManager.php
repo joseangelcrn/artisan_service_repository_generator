@@ -11,6 +11,7 @@ class RepositoryManager extends CreationManager
     {
         $this->parentDir = 'Repositories';
         $this->suffix = 'Repository';
+        $this->namespace = 'App\Repositories';
         parent::__construct($rawClassName);
 
     }

@@ -45,12 +45,15 @@ class GenerateService extends GeneratorCommand
 
             $serviceManager->addAttributeToClass(
                 $repositoryManager->getVariable(),
-                $repositoryManager->getType()
+                $repositoryManager->getType(),
+                $repositoryManager->getNameSpace()
             );
 
             $serviceManager->addParamToConstructor(
                 $repositoryManager->getVariable(),
-                $repositoryManager->getType()
+                $repositoryManager->getType(),
+                $repositoryManager->getNameSpace()
+
             );
         }
 
@@ -60,12 +63,14 @@ class GenerateService extends GeneratorCommand
 
             $serviceManager->addAttributeToClass(
                 $auxServiceManager->getVariable(),
-                $auxServiceManager->getType()
+                $auxServiceManager->getType(),
+                $auxServiceManager->getNameSpace()
             );
 
             $serviceManager->addParamToConstructor(
                 $auxServiceManager->getVariable(),
-                $auxServiceManager->getType()
+                $auxServiceManager->getType(),
+                $auxServiceManager->getNameSpace()
             );
         }
 

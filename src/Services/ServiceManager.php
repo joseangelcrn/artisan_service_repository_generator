@@ -11,6 +11,7 @@ class ServiceManager extends CreationManager
     {
         $this->parentDir = 'Services';
         $this->suffix = 'Service';
+        $this->namespace = 'App\Services';
         parent::__construct($rawClassName);
 
     }
