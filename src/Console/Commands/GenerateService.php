@@ -9,10 +9,9 @@ use josanangel\ServiceRepositoryManager\Services\ServiceManager;
 
 class GenerateService extends GeneratorCommand
 {
-    use AuxGenerator;
 
     // El nombre del comando que ejecutarás en la consola
-    protected $signature = 'make:servicev2 {name} {--repositories=} {--services=}';
+    protected $signature = 'make:service {name} {--repositories=} {--services=}';
 
     // La descripción del comando
     protected $description = 'Generate a service class';

@@ -7,7 +7,7 @@ use josanangel\ServiceRepositoryManager\Services\RepositoryManager;
 class GenerateRepository extends GeneratorCommand
 {
     // El nombre del comando que ejecutarás en la consola
-    protected $signature = 'make:repositoryv2 {name}';
+    protected $signature = 'make:repository {name}';
 
     // La descripción del comando
     protected $description = 'Generate a repository class';
