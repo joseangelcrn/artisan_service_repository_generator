@@ -49,10 +49,6 @@ abstract class CreationManager implements CreationManagerActions
 
         $this->rawClassName = $rawClassName;
         $this->module = $module;
-        $this->normalizeClassName();
-        $this->generateNameSpace();
-        $this->instanceClassBuilder();
-        $this->generateConstructor();
     }
 
      function generateConstructor()
@@ -255,5 +251,20 @@ abstract class CreationManager implements CreationManagerActions
         return $this->getConfig()['modules'];
     }
 
+    /**
+     * Runner
+     * @throws \Exception
+     */
+
+    public function run()
+    {
+        $this->normalizeClassName();
+        $this->generateNameSpace();
+        $this->instanceClassBuilder();
+        $this->generateConstructor();
+
+        $this->resolveVariables();
+        $this->generateFile();
+    }
 }
 

@@ -17,13 +17,4 @@ class RepositoryManager extends CreationManager
         parent::__construct($rawClassName,$module);
 
     }
-
-    public function run()
-    {
-        $this->resolveVariables();
-        $this->generateFile();
-    }
-
-
-
 }

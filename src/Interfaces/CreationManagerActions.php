@@ -14,5 +14,7 @@ interface CreationManagerActions
     function addParamToConstructor($varName,$varType);
 
     function applySuffix();
+
+    function run();
 }
 
