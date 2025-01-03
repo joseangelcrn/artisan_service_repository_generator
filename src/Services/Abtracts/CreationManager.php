@@ -32,8 +32,12 @@ abstract class CreationManager implements CreationManagerActions
 
     protected $typeResolving;
 
+    protected $config;
 
-    public function __construct(string $rawClassName)
+    protected $module;
+
+
+    public function __construct(string $rawClassName, string $module = null)
     {
 
         $this->typeResolving = false;
@@ -44,6 +48,7 @@ abstract class CreationManager implements CreationManagerActions
 
 
         $this->rawClassName = $rawClassName;
+        $this->module = $module;
         $this->normalizeClassName();
         $this->generateNameSpace();
         $this->instanceClassBuilder();
@@ -58,6 +63,19 @@ abstract class CreationManager implements CreationManagerActions
     function generateNameSpace()
     {
         if ($this->namespace){
+
+            if ($this->configIsModulesEnabled()){
+                if (!$this->hasNamespaceModuleKeyWord()){
+                    throw new \Exception('Namespace require a "{module_name}" keyword if module config is enabled.') ;
+                }
+                else if (!$this->module){
+                    throw new \Exception('Module can not be null if module config is enabled.') ;
+                }
+                else {
+                    $this->namespace = Str::replace('{module_name}',$this->module,$this->namespace);
+                }
+            }
+
             $this->namespaceBuilder = new PhpNamespace($this->namespace);
             $this->classBuilder = $this->namespaceBuilder->addClass($this->normalizedClassName);
         }
@@ -73,7 +91,8 @@ abstract class CreationManager implements CreationManagerActions
     function normalizeClassName()
     {
 
-        $className = Str::lower($this->rawClassName);
+        $className = $this->rawClassName;
+        $className = Str::lower($className);
         $className = Str::replace('repository','',$className);
         $className = Str::replace('service','',$className);
         $className = Str::ucfirst($className);
@@ -154,8 +173,13 @@ abstract class CreationManager implements CreationManagerActions
 
     function generateFile()
     {
-        $path = app_path($this->parentDir.'/'.$this->normalizedClassName.".php");
+        $previousPath = app_path($this->getParentDir());
 
+        if (!is_dir($previousPath)){
+            mkdir($previousPath,0755,true);
+        }
+
+        $path=$previousPath.DIRECTORY_SEPARATOR.$this->normalizedClassName.".php";
 
         if ($this->typeResolving){
             $content = $this->namespaceBuilder;
@@ -195,5 +219,41 @@ abstract class CreationManager implements CreationManagerActions
     {
         return $this->namespace;
     }
+
+    public function getParentDir()
+    {
+        $moduleDir = '';
+        if ($this->configIsModulesEnabled()){
+            $moduleDir = $this->module.DIRECTORY_SEPARATOR;
+        }
+        return $moduleDir.$this->parentDir;
+    }
+
+    public function hasNamespaceModuleKeyWord()
+    {
+        return str_contains($this->namespace,'{module_name}');
+    }
+
+
+
+    /**
+     * Config
+     */
+
+    protected function loadConfig()
+    {
+        $this->config = config('service_repository_manager');
+    }
+
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    public function configIsModulesEnabled()
+    {
+        return $this->getConfig()['modules'];
+    }
+
 }
 

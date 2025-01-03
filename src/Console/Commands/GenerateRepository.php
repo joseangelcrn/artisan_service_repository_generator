@@ -7,7 +7,7 @@ use josanangel\ServiceRepositoryManager\Services\RepositoryManager;
 class GenerateRepository extends GeneratorCommand
 {
     // El nombre del comando que ejecutarás en la consola
-    protected $signature = 'make:repository {name}';
+    protected $signature = 'make:repository {name} {--module=}';
 
     // La descripción del comando
     protected $description = 'Generate a repository class';
@@ -19,12 +19,15 @@ class GenerateRepository extends GeneratorCommand
 
     public function handle()
     {
-        $name = $this->argument('name');
 
-        $repositoryManager = new RepositoryManager($name);
+        $name = $this->argument('name');
+        $module = $this->option('module');
+
+        $repositoryManager = new RepositoryManager($name,$module);
+
         $repositoryManager->run();
 
-        $this->info('Generate repository v2');
+        $this->info('');
     }
 
 
