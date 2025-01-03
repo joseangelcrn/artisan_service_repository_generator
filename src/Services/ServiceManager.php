@@ -7,12 +7,14 @@ use josanangel\ServiceRepositoryManager\Services\Abtracts\CreationManager;
 class ServiceManager extends CreationManager
 {
 
-    public function __construct($rawClassName)
+    public function __construct($rawClassName,$module = null)
     {
-        $this->parentDir = 'Services';
-        $this->suffix = 'Service';
-        $this->namespace = 'App\Services';
-        parent::__construct($rawClassName);
+        $this->loadConfig();
+
+        $this->parentDir = $this->config['services']['path'];
+        $this->suffix = $this->config['services']['suffix'];
+        $this->namespace = $this->config['services']['namespace'];
+        parent::__construct($rawClassName,$module);
 
     }
 

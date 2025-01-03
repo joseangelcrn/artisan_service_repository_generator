@@ -11,7 +11,7 @@ class GenerateService extends GeneratorCommand
 {
 
     // El nombre del comando que ejecutarás en la consola
-    protected $signature = 'make:service {name} {--repositories=} {--services=}';
+    protected $signature = 'make:service {name} {--repositories=} {--services=} {--module=}';
 
     // La descripción del comando
     protected $description = 'Generate a service class';
@@ -24,6 +24,7 @@ class GenerateService extends GeneratorCommand
     public function handle()
     {
         $name = $this->argument('name');
+        $module = $this->option('module');
 
         $repositories = $this->option('repositories',[]);
         $repositories = explode(',',$repositories);
@@ -36,10 +37,10 @@ class GenerateService extends GeneratorCommand
         $services = collect($services);
         $services = $services->filter();
 
-        $serviceManager = new ServiceManager($name);
+        $serviceManager = new ServiceManager($name,$module);
 
         foreach ($repositories as $repository){
-            $repositoryManager = new RepositoryManager($repository);
+            $repositoryManager = new RepositoryManager($repository,$module);
             $repositoryManager->run();
 
             $serviceManager->addAttributeToClass(
@@ -57,7 +58,7 @@ class GenerateService extends GeneratorCommand
         }
 
         foreach ($services as $service){
-            $auxServiceManager = new ServiceManager($service);
+            $auxServiceManager = new ServiceManager($service,$module);
             $auxServiceManager->run();
 
             $serviceManager->addAttributeToClass(
