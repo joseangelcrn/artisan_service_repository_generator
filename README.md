@@ -16,8 +16,7 @@ The code is designed so that any developer can build upon it, as it follows best
 
 ## Requirements
 
-- PHP >= 8.3
-- Laravel >= 11
+- PHP 8.0 - 8.4
 - Composer
 - nette/php-generator >= 4.1
 
