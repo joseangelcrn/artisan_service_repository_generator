@@ -83,7 +83,7 @@ abstract class CreationManager implements CreationManagerActions
     {
         $moduleDir = '';
         if ($this->configIsModulesEnabled()){
-            $moduleDir = $this->module.DIRECTORY_SEPARATOR;
+            $moduleDir = 'Modules'.DIRECTORY_SEPARATOR.$this->module.DIRECTORY_SEPARATOR;
         }
         return $moduleDir.$this->parentDir;
     }

@@ -34,7 +34,7 @@ composer require josanangel/service-repository-manager:dev-master
 
 ## After install
 
-### Add this line to  ``bootstrap/providers.php`` file:
+### Add the following service provider to your  ``bootstrap/providers.php`` file:
 
 ````php
 
@@ -56,13 +56,16 @@ return [
 
 SRM_MODULES=false
 
+#SRM_REPOSITORIES_NAMESPACE='App\Modules\{module_name}\Repositories'
 SRM_REPOSITORIES_NAMESPACE='App\Repositories'
 SRM_REPOSITORIES_PATH='Repositories'
 SRM_REPOSITORIES_SUFFIX='Repository'
 
+#SRM_SERVICES_NAMESPACE='App\Modules\{module_name}\Services'
 SRM_SERVICES_NAMESPACE='App\Services'
 SRM_SERVICES_PATH='Services'
 SRM_SERVICES_SUFFIX='Service'
+
 ````
 
 ### Publish configuration file
@@ -77,11 +80,13 @@ the ``{node_modules}`` keyword to replace in execution time when commands are ca
 
 Then the commands will need ``--module=`` option to specify where file should be located.
 
-Example .env:
+
+
+Example .env using module:
 ```dotenv
-SRM_MODULES=false
-SRM_REPOSITORIES_NAMESPACE='App\{module_name}\Repositories'
-SRM_SERVICES_NAMESPACE='App\{module_name}\Services'
+SRM_MODULES=true
+SRM_REPOSITORIES_NAMESPACE='App\Modules\{module_name}\Repositories'
+SRM_SERVICES_NAMESPACE='App\Modules\{module_name}\Services'
 ```
 
 
