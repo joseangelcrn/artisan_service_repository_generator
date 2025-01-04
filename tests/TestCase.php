@@ -15,6 +15,7 @@ class TestCase extends TestCaseOrchestra
     {
         parent::setUp();
         $this->faker  = Factory::create();
+        $this->loadConfiguration();
     }
     protected function getPackageProviders($app)
     {
@@ -27,4 +28,14 @@ class TestCase extends TestCaseOrchestra
         return 'test_'.time().md5($this->faker->word());
     }
 
+    protected function loadConfiguration()
+    {
+        $globalConfPath  = __DIR__.'/../config/global.php';
+        $this->app->make('config')->set('service_repository_manager',include  $globalConfPath);
+    }
+
+    protected function changeConfig($key,$value)
+    {
+        config()->set("service_repository_manager.$key",$value);
+    }
 }
