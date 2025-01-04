@@ -45,7 +45,57 @@ return [
      josanangel\ServiceRepositoryManager\ServiceRepositoryManagerServiceProvider::class,
 ];
 ````
-### Execute composer dump-autoload after that:
+
+## Configuration
+
+### Example .env
+
+
+````dotenv
+# service repository manager .env
+
+SRM_MODULES=false
+
+SRM_REPOSITORIES_NAMESPACE='App\Repositories'
+SRM_REPOSITORIES_PATH='Repositories'
+SRM_REPOSITORIES_SUFFIX='Repository'
+
+SRM_SERVICES_NAMESPACE='App\Services'
+SRM_SERVICES_PATH='Services'
+SRM_SERVICES_SUFFIX='Service'
+````
+
+### Publish configuration file
+````bash
+php artisan vendor:publish --tag=service_repository_manager_config
+````
+### Laravel module (Optional)
+
+If your project follows a module structure such as https://nwidart.com/laravel-modules/v6/introduction
+You need to change  `SRM_MODULES` to **true** and set a **repository and service** namespace which contains
+the ``{node_modules}`` keyword to replace in execution time when commands are called.
+
+Then the commands will need ``--module=`` option to specify where file should be located.
+
+Example .env:
+```dotenv
+SRM_MODULES=false
+SRM_REPOSITORIES_NAMESPACE='App\{module_name}\Repositories'
+SRM_SERVICES_NAMESPACE='App\{module_name}\Services'
+```
+
+
+Commands examples using module:
+
+```bash
+php artisan make:repository User --module=User
+```
+
+```bash
+php artisan make:service User --module=User
+```
+
+## Execute composer dump-autoload after that:
 
 ```bash
 composer dump-auto
@@ -66,6 +116,8 @@ php artisan make:repository User
 ````php
 <?php 
 
+namespace App\Repositories;
+
 class UserRepository
 {
 	public function __construct()
@@ -85,6 +137,8 @@ php artisan make:service User
 
 ````php
 <?php 
+
+namespace App\Services;
 
 class UserService
 {
@@ -109,6 +163,8 @@ php artisan make:service User --services=auth
 ````php
 <?php 
 
+namespace App\Services;
+
 class UserService
 {
 	protected AuthService $authService;
@@ -120,9 +176,12 @@ class UserService
 	}
 }
 
+
 ````
 ````php
 <?php 
+
+namespace App\Services;
 
 class AuthService
 {
@@ -144,6 +203,8 @@ php artisan make:service User --services=auth,map --repositories=auth
 ````php
 <?php 
 
+namespace App\Repositories;
+
 class AuthRepository
 {
 	public function __construct()
@@ -151,9 +212,12 @@ class AuthRepository
 	}
 }
 
+
 ````
 ````php
 <?php 
+
+namespace App\Services;
 
 class AuthService
 {
@@ -167,6 +231,8 @@ class AuthService
 ````php
 <?php 
 
+namespace App\Services;
+
 class MapService
 {
 	public function __construct()
@@ -174,9 +240,14 @@ class MapService
 	}
 }
 
+
 ````
 ````php
 <?php 
+
+namespace App\Services;
+
+use App\Repositories\AuthRepository;
 
 class UserService
 {
