@@ -76,6 +76,6 @@ class GenerateService extends GeneratorCommand
 
         $serviceManager->run();
 
-        $this->info('Generate service v2');
+        $this->info('Service has been created successfully.');
     }
 }

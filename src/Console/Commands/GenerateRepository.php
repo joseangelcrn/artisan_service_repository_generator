@@ -27,7 +27,7 @@ class GenerateRepository extends GeneratorCommand
 
         $repositoryManager->run();
 
-        $this->info('');
+        $this->info('Repository has been created successfully.');
     }
 
 
