@@ -38,4 +38,9 @@ class TestCase extends TestCaseOrchestra
     {
         config()->set("service_repository_manager.$key",$value);
     }
+
+    protected function forceError($message)
+    {
+        $this->assertEquals(true,false,$message);
+    }
 }

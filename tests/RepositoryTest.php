@@ -29,6 +29,7 @@ class RepositoryTest extends TestCase
 
         try{
             $this->artisan("make:repository $repositoryName");
+            $this->forceError("This test should have failed.");
         }catch (\Exception $e){
             $this->assertEquals(
                 $e->getMessage(),
@@ -44,6 +45,7 @@ class RepositoryTest extends TestCase
 
         try{
             $this->artisan("make:repository $repositoryName");
+            $this->forceError("This test should have failed.");
         }catch (\Exception $e){
             $this->assertEquals(
                 $e->getMessage(),
