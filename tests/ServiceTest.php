@@ -71,4 +71,46 @@ class ServiceTest extends TestCase
         $this->artisan("make:service $serviceName --repositories=$repositoryNames --services=$serviceNames")->assertOk();
 
     }
+
+    public function test_command_creates_single_service_with_modules_enabled_with_opt_module_and_namespace_keyword_must_success(): void
+    {
+        $serviceName = $this->randomName();
+        $moduleName = $this->randomName();
+        $this->changeConfig('modules',true);
+        $this->changeConfig('services.namespace','App\{module_name}\Services');
+
+        $this->artisan("make:service $serviceName --module=$moduleName")->assertOk();
+    }
+    public function test_command_creates_single_service_with_modules_enabled_without_opt_module_and_namespace_keyword_must_fail(): void
+    {
+        $serviceName = $this->randomName();
+        $this->changeConfig('modules',true);
+        $this->changeConfig('repositories.namespace','App\Services');
+
+        try{
+            $this->artisan("make:service $serviceName");
+            $this->forceError("This test should have failed.");
+        }catch (\Exception $e){
+            $this->assertEquals(
+                $e->getMessage(),
+                'Namespace require a "{module_name}" keyword if module config is enabled.'
+            );
+        }
+    }
+    public function test_command_creates_single_service_with_modules_enabled_without_opt_module_must_fail(): void
+    {
+        $serviceName = $this->randomName();
+        $this->changeConfig('modules',true);
+        $this->changeConfig('services.namespace','App\{module_name}\Services');
+
+        try{
+            $this->artisan("make:service $serviceName");
+            $this->forceError("This test should have failed.");
+        }catch (\Exception $e){
+            $this->assertEquals(
+                $e->getMessage(),
+                'Module can not be null if module config is enabled.'
+            );
+        }
+    }
 }
