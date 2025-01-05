@@ -28,7 +28,7 @@ https://packagist.org/packages/josanangel/service-repository-manager
 ### Install the package via Composer:
 
 ```bash
-composer require josanangel/service-repository-manager:dev-master
+composer require josanangel/service-repository-manager
 ```
 
 ## After install
