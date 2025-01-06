@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * -------------------------
+ * GLOBAL CONFIGURATION
+ * -------------------------
+ *
+ *  All custom configuration params are located on this file.
+ *  This file can be published by executing the following command:
+ *
+ *  php artisan vendor:publish --tag=service_repository_manager_config
+ *
+ */
+
+
 $ENV_CONFIG_PREFIX = 'SRM'; //Service Repository Manager
 
 
