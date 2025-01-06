@@ -12,6 +12,12 @@ class RepositoryTest extends TestCase
 
         $this->artisan("make:repository $repositoryName")->assertOk();
     }
+
+    /**
+     * If command is executed with modules conf enabled and --module option is present in command calling and SRM_REPOSITORIES_NAMESPACE env value
+     * contains the {node_module} keyword should be successfully run
+     * @return void
+     */
     public function test_command_creates_single_repository_with_modules_enabled_with_opt_module_and_namespace_keyword_must_success(): void
     {
         $repositoryName = $this->randomName();
@@ -21,6 +27,12 @@ class RepositoryTest extends TestCase
 
         $this->artisan("make:repository $repositoryName --module=$moduleName")->assertOk();
     }
+
+    /**
+     * If command is executed with modules conf enabled and --module option is not present in command calling and SRM_REPOSITORIES_NAMESPACE env value
+     * does not contain the {node_module} keyword should to throw the specific error
+     * @return void
+     */
     public function test_command_creates_single_repository_with_modules_enabled_without_opt_module_and_namespace_keyword_must_fail(): void
     {
         $repositoryName = $this->randomName();
@@ -37,6 +49,12 @@ class RepositoryTest extends TestCase
             );
         }
     }
+
+    /**
+     * If command is executed with modules enabled and --module option is not present but SRM_SERVICES_NAMESPACE env value
+     * contains {node_module} should throw the specific error
+     * @return void
+     */
     public function test_command_creates_single_repository_with_modules_enabled_without_opt_module_must_fail(): void
     {
         $repositoryName = $this->randomName();

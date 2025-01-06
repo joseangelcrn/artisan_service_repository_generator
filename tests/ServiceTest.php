@@ -72,6 +72,11 @@ class ServiceTest extends TestCase
 
     }
 
+    /**
+     * If command is executed with modules conf enabled and --module option is present in command calling and SRM_SERVICES_NAMESPACE env value
+     * contains the {node_module} keyword should be successfully run
+     * @return void
+     */
     public function test_command_creates_single_service_with_modules_enabled_with_opt_module_and_namespace_keyword_must_success(): void
     {
         $serviceName = $this->randomName();
@@ -81,6 +86,12 @@ class ServiceTest extends TestCase
 
         $this->artisan("make:service $serviceName --module=$moduleName")->assertOk();
     }
+
+    /**
+     * If command is executed with modules conf enabled and --module option is present in command calling and SRM_SERVICES_NAMESPACE env value
+     * does not contain the {node_module} keyword should throw the specific error
+     * @return void
+     */
     public function test_command_creates_single_service_with_modules_enabled_without_opt_module_and_namespace_keyword_must_fail(): void
     {
         $serviceName = $this->randomName();
@@ -97,6 +108,12 @@ class ServiceTest extends TestCase
             );
         }
     }
+
+    /**
+     * If command is executed with modules conf enabled and --module option is not present in command calling and SRM_SERVICES_NAMESPACE env value
+     *  contains the {node_module} keyword should throw the specific error
+     * @return void
+     */
     public function test_command_creates_single_service_with_modules_enabled_without_opt_module_must_fail(): void
     {
         $serviceName = $this->randomName();

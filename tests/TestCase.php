@@ -28,17 +28,35 @@ class TestCase extends TestCaseOrchestra
         return 'test_'.time().md5($this->faker->word());
     }
 
+    /**
+     * Load configuration file which is needed for commands works properly
+     * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     protected function loadConfiguration()
     {
         $globalConfPath  = __DIR__.'/../config/global.php';
         $this->app->make('config')->set('service_repository_manager',include  $globalConfPath);
     }
 
+    /**
+     * Change default configuration values to tests different uses cases
+     *
+     * @param $key
+     * @param $value
+     * @return void
+     */
     protected function changeConfig($key,$value)
     {
         config()->set("service_repository_manager.$key",$value);
     }
 
+    /**
+     * Force error to some controlled test ways
+     *
+     * @param $message
+     * @return void
+     */
     protected function forceError($message)
     {
         $this->assertEquals(true,false,$message);
