@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Interface which group all common actions of CreationManager abstract class
+ */
+
 namespace josanangel\ServiceRepositoryManager\Interfaces;
 
 interface CreationManagerActions

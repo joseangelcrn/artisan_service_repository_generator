@@ -13,7 +13,8 @@ class ServiceRepositoryManagerServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        // Views, migrations, routes, etc..
+        // Register the commands included in this package for use in Artisan
+        // These commands are responsible for generating repository and service classes
         $this->commands([
             GenerateRepository::class,
             GenerateService::class

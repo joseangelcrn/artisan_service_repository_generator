@@ -1,5 +1,19 @@
 <?php
 
+/**
+ * Implementation of GeneratorCommand abstract class, dedicated to generate Service files.
+ * This file is handled by ServiceManager, this one contains complex and configurable logic through service file creation
+ *
+ * Required Params:
+ *  + {name} : Name of service you are going to create.
+ *
+ * Optional Params:
+ *  + {--module} : Indicate where is going to generate file(s)
+ *  + {--repositories} : Indicate possible repositories which might to be declared as injected dependencies in main service file
+ *  + {--services} : Indicate possible services which might to be declared as injected dependencies in main service file
+ *
+ */
+
 namespace josanangel\ServiceRepositoryManager\Console\Commands;
 
 
@@ -10,10 +24,8 @@ use josanangel\ServiceRepositoryManager\Services\ServiceManager;
 class GenerateService extends GeneratorCommand
 {
 
-    // El nombre del comando que ejecutarás en la consola
     protected $signature = 'make:service {name} {--repositories=} {--services=} {--module=}';
 
-    // La descripción del comando
     protected $description = 'Generate a service class';
 
     public function __construct()

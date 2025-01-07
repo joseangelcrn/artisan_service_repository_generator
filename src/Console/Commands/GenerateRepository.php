@@ -1,15 +1,25 @@
 <?php
 
+/**
+ * Implementation of GeneratorCommand abstract class, dedicated to generate Repository files.
+ * This file is handled by RepositoryManager, this one contains complex and configurable logic through repository file creation
+ *
+ * Required Params:
+ *  + {name} : Name of repository you are going to create.
+ *
+ * Optional Params:
+ *  + {--module} : Indicate where is going to generate file(s)
+ *
+ */
+
 namespace josanangel\ServiceRepositoryManager\Console\Commands;
 
 use josanangel\ServiceRepositoryManager\Services\RepositoryManager;
 
 class GenerateRepository extends GeneratorCommand
 {
-    // El nombre del comando que ejecutarás en la consola
     protected $signature = 'make:repository {name} {--module=}';
 
-    // La descripción del comando
     protected $description = 'Generate a repository class';
 
     public function __construct()

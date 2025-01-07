@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * CreationManager group all generational functions to deploy a Repository/Service file according to specific configuration.
+ * This class contains all complex logic which is responsible for managing the creation process of both types of files.
+ */
+
 namespace josanangel\ServiceRepositoryManager\Services\Abtracts;
 
 use Illuminate\Support\Str;
