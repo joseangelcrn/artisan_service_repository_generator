@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * This class extends CreationManager in order to take advantage of all the resources it provides by CreationManager class,
+ * simplifying the creation of services as much as possible.
+ */
+
 namespace josanangel\ServiceRepositoryManager\Services;
 
 use josanangel\ServiceRepositoryManager\Services\Abtracts\CreationManager;

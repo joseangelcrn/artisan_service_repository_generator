@@ -1,18 +1,30 @@
 <?php
 
 /**
- * CreationManager group all generational functions to deploy a Repository/Service file according to specific configuration.
+ * CreationManager groups all generational functions to deploy a Repository/Service files according to specific configuration.
  * This class contains all complex logic which is responsible for managing the creation process of both types of files.
+ *
+ * Additionally, this class is organized by different traits according to its functions:
+ *
+ *  - HasClassBuilder: Manages the file structure creation.
+ *  - HasConfig: Handles all logic related to possibles configuration methods.
+ *  - HasNormalizer: Responsible for sanitizing different values.
+ */
+
+/**
+ * BEYOND EXISTING CONFIGURATION
+ *
+ * If it was necessary, you might generate a new abstract class, extending this one or not and repeat the same process
+ * what is implemented right now, with entirely different logic and purposes keeping a clean and modularized code exploring
+ *  news alternatives of creation, functionality extensions, etc.
  */
 
 namespace josanangel\ServiceRepositoryManager\Services\Abtracts;
 
-use Illuminate\Support\Str;
 use josanangel\ServiceRepositoryManager\Interfaces\CreationManagerActions;
 use josanangel\ServiceRepositoryManager\Services\Abtracts\Traits\HasConfig;
 use josanangel\ServiceRepositoryManager\Services\Abtracts\Traits\HasNormalizer;
 use Nette\PhpGenerator\Printer;
-use stdClass;
 use josanangel\ServiceRepositoryManager\Services\Abtracts\Traits\HasClassBuilder;
 abstract class CreationManager implements CreationManagerActions
 {
@@ -96,6 +108,8 @@ abstract class CreationManager implements CreationManagerActions
 
 
     /**
+     * Ordered process to generate any file, it can be configurable if needed, overriding this 'run' method from child
+     * file.
      * Runner
      * @throws \Exception
      */
