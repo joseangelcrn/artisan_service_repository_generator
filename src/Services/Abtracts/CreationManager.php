@@ -58,11 +58,15 @@ abstract class CreationManager implements CreationManagerActions
 
     protected $module;
 
+    protected $flagBeforeRun;
+
 
     public function __construct(string $rawClassName, string $module = null)
     {
 
         $this->typeResolving = false;
+
+        $this->flagBeforeRun = false;
 
         $this->attributes = collect();
         $this->constructorParams = collect();
@@ -106,6 +110,14 @@ abstract class CreationManager implements CreationManagerActions
     }
 
 
+    public function beforeRun()
+    {
+        $this->normalizeClassName();
+        $this->generateNameSpace();
+        $this->instanceClassBuilder();
+        $this->generateConstructor();
+        $this->flagBeforeRun = true;
+    }
 
     /**
      * Ordered process to generate any file, it can be configurable if needed, overriding this 'run' method from child
@@ -116,11 +128,9 @@ abstract class CreationManager implements CreationManagerActions
 
     public function run()
     {
-        $this->normalizeClassName();
-        $this->generateNameSpace();
-        $this->instanceClassBuilder();
-        $this->generateConstructor();
-
+        if (!$this->flagBeforeRun){
+            $this->beforeRun();
+        }
         $this->resolveVariables();
         $this->generateFile();
     }

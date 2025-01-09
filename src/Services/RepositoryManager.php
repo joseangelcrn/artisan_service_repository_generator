@@ -22,4 +22,42 @@ class RepositoryManager extends CreationManager
         parent::__construct($rawClassName,$module);
 
     }
+
+
+    /**
+     * Generate common functions of CRUD operations
+     * @return void
+     */
+    function generateCrudMethods()
+    {
+        //Index
+        $index = $this->classBuilder->addMethod('index');
+        $index->setBody('$this->model->all();');
+        $index->setPublic();
+
+        //Store
+        $store = $this->classBuilder->addMethod('store');
+        $store->addParameter('data');
+        $store->setBody('$this->model->create($data);');
+        $store->setPublic();
+
+        //Show
+        $show = $this->classBuilder->addMethod('show');
+        $show->addParameter('id');
+        $show->setBody('$this->model->findById($id);');
+        $show->setPublic();
+
+        //Update
+        $update = $this->classBuilder->addMethod('update');
+        $update->addParameter('id');
+        $update->addParameter('data');
+        $update->setBody('$this->model->where("id",$id)->update($data);');
+        $update->setPublic();
+
+        //Destroy
+        $destroy = $this->classBuilder->addMethod('destroy');
+        $destroy->addParameter('id');
+        $destroy->setBody('$this->model->where("id",$id)->delete();');
+        $destroy->setPublic();
+    }
 }

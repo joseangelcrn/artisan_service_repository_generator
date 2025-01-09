@@ -9,7 +9,7 @@
  *
  * Optional Params:
  *  + {--module} : Indicate where is going to generate file(s)
- *
+ *  + {--crud} : Specify if the repository should include predefined CRUD functions
  */
 
 namespace josanangel\ServiceRepositoryManager\Console\Commands;
@@ -18,7 +18,7 @@ use josanangel\ServiceRepositoryManager\Services\RepositoryManager;
 
 class GenerateRepository extends GeneratorCommand
 {
-    protected $signature = 'make:repository {name} {--module=}';
+    protected $signature = 'make:repository {name} {--module=} {--crud}';
 
     protected $description = 'Generate a repository class';
 
@@ -32,8 +32,15 @@ class GenerateRepository extends GeneratorCommand
 
         $name = $this->argument('name');
         $module = $this->option('module');
+        $crud = $this->option('crud');
 
         $repositoryManager = new RepositoryManager($name,$module);
+        $repositoryManager->beforeRun();
+
+        if ($crud){
+            $repositoryManager->addAttributeToClass('model');
+            $repositoryManager->generateCrudMethods();
+        }
 
         $repositoryManager->run();
 

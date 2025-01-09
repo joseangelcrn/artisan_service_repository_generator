@@ -11,6 +11,7 @@
  *  + {--module} : Indicate where is going to generate file(s)
  *  + {--repositories} : Indicate possible repositories which might to be declared as injected dependencies in main service file
  *  + {--services} : Indicate possible services which might to be declared as injected dependencies in main service file
+ *  + {--repositories-crud} :Indicate possible repositories which might to be declared as injected dependencies in main service file with predefined CRUD functions in it
  *
  */
 
@@ -24,7 +25,7 @@ use josanangel\ServiceRepositoryManager\Services\ServiceManager;
 class GenerateService extends GeneratorCommand
 {
 
-    protected $signature = 'make:service {name} {--repositories=} {--services=} {--module=}';
+    protected $signature = 'make:service {name} {--repositories=} {--services=} {--module=} {--repositories-crud=}';
 
     protected $description = 'Generate a service class';
 
@@ -43,6 +44,11 @@ class GenerateService extends GeneratorCommand
         $repositories = collect($repositories);
         $repositories = $repositories->filter();
 
+        $repositoriesCrud = $this->option('repositories-crud',[]);
+        $repositoriesCrud = explode(',',$repositoriesCrud);
+        $repositoriesCrud = collect($repositoriesCrud);
+        $repositoriesCrud = $repositoriesCrud->filter();
+
 
         $services = $this->option('services',[]);
         $services = explode(',',$services);
@@ -53,6 +59,27 @@ class GenerateService extends GeneratorCommand
 
         foreach ($repositories as $repository){
             $repositoryManager = new RepositoryManager($repository,$module);
+            $repositoryManager->run();
+
+            $serviceManager->addAttributeToClass(
+                $repositoryManager->getVariable(),
+                $repositoryManager->getType(),
+                $repositoryManager->getNameSpace()
+            );
+
+            $serviceManager->addParamToConstructor(
+                $repositoryManager->getVariable(),
+                $repositoryManager->getType(),
+                $repositoryManager->getNameSpace()
+
+            );
+        }
+
+        foreach ($repositoriesCrud as $repository){
+            $repositoryManager = new RepositoryManager($repository,$module);
+            $repositoryManager->beforeRun();
+            $repositoryManager->addAttributeToClass('model');
+            $repositoryManager->generateCrudMethods();
             $repositoryManager->run();
 
             $serviceManager->addAttributeToClass(

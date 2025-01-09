@@ -53,7 +53,7 @@ trait HasClassBuilder
 
 
 
-    function addAttributeToClass($varName,$varType,$nameSpace = null)
+    function addAttributeToClass($varName,$varType = null,$nameSpace = null)
     {
         $newAttribute = new StdClass();
         $newAttribute->name = $varName;
