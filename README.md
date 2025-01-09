@@ -105,6 +105,20 @@ php artisan make:service User --module=User
 composer dump-auto
 ```
 
+## Command parameter details
+
+
+| Command                      | Parameter               | Type       | Description                                                                                              | Required |
+|------------------------------|-------------------------|------------|----------------------------------------------------------------------------------------------------------|----------|
+| `php artisan make:repository` | `name`                 | Argument   | Name of the repository you want to create.                                                              | Yes      |
+|                              | `--module`             | Option     | Specifies where the file(s) will be generated.                                                          | No       |
+|                              | `--crud`               | Option     | Specifies if the repository should include predefined CRUD functions.                                   | No       |
+| `php artisan make:service`    | `name`                 | Argument   | Name of the service you want to create.                                                                 | Yes      |
+|                              | `--module`             | Option     | Specifies where the file(s) will be generated.                                                          | No       |
+|                              | `--repositories`       | Option     | Indicates possible repositories to declare as injected dependencies in the main service file.           | No       |
+|                              | `--services`           | Option     | Indicates possible services to declare as injected dependencies in the main service file.               | No       |
+|                              | `--repositories-crud`  | Option     | Indicates repositories to declare as injected dependencies, including predefined CRUD functions.        | No       |
+
 <hr>
 <hr>
 
