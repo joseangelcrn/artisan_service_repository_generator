@@ -10,4 +10,13 @@ use josanangel\ServiceRepositoryManager\Console\Commands\Traits\Normalizer;
 class GeneratorCommand extends Command
 {
 
+    protected function getMultipleValuesFromOption($key,$default = [])
+    {
+        $options = $this->option($key,$default);
+        $options = explode(',',$options);
+        $options = collect($options);
+        $options = $options->filter();
+
+        return $options;
+    }
 }

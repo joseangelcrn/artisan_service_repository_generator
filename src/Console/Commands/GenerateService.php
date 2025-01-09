@@ -39,21 +39,9 @@ class GenerateService extends GeneratorCommand
         $name = $this->argument('name');
         $module = $this->option('module');
 
-        $repositories = $this->option('repositories',[]);
-        $repositories = explode(',',$repositories);
-        $repositories = collect($repositories);
-        $repositories = $repositories->filter();
-
-        $repositoriesCrud = $this->option('repositories-crud',[]);
-        $repositoriesCrud = explode(',',$repositoriesCrud);
-        $repositoriesCrud = collect($repositoriesCrud);
-        $repositoriesCrud = $repositoriesCrud->filter();
-
-
-        $services = $this->option('services',[]);
-        $services = explode(',',$services);
-        $services = collect($services);
-        $services = $services->filter();
+        $repositories = $this->getMultipleValuesFromOption('repositories');
+        $repositoriesCrud = $this->getMultipleValuesFromOption('repositories-crud',[]);
+        $services = $this->getMultipleValuesFromOption('services',[]);
 
         $serviceManager = new ServiceManager($name,$module);
 
