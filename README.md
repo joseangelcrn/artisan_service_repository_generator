@@ -144,6 +144,59 @@ class UserRepository
 }
 ````
 
+### Create a UserRepository file with CRUD methods
+
+```bash
+php artisan make:repository User --crud
+```
+### Content
+
+````php
+<?php 
+
+namespace App\Repositories;
+
+class UserRepository
+{
+	protected $model;
+
+
+	public function __construct()
+	{
+	}
+
+
+	public function index()
+	{
+		$this->model->all();
+	}
+
+
+	public function store($data)
+	{
+		$this->model->create($data);
+	}
+
+
+	public function show($id)
+	{
+		$this->model->findById($id);
+	}
+
+
+	public function update($id, $data)
+	{
+		$this->model->where("id",$id)->update($data);
+	}
+
+
+	public function destroy($id)
+	{
+		$this->model->where("id",$id)->delete();
+	}
+}
+
+````
 <hr>
 
 ### Create a UserService file
@@ -279,6 +332,77 @@ class UserService
 		$this->authRepository = $authRepository;
 		$this->authService = $authService;
 		$this->mapService = $mapService;
+	}
+}
+
+````
+#### UserService  + [ _injected_ ] UserRepository with CRUD methods
+
+```bash
+php artisan make:service User --repositories-crud=User
+```
+
+````php
+<?php 
+
+namespace App\Repositories;
+
+class UserRepository
+{
+	protected $model;
+
+
+	public function __construct()
+	{
+	}
+
+
+	public function index()
+	{
+		$this->model->all();
+	}
+
+
+	public function store($data)
+	{
+		$this->model->create($data);
+	}
+
+
+	public function show($id)
+	{
+		$this->model->findById($id);
+	}
+
+
+	public function update($id, $data)
+	{
+		$this->model->where("id",$id)->update($data);
+	}
+
+
+	public function destroy($id)
+	{
+		$this->model->where("id",$id)->delete();
+	}
+}
+````
+
+````php
+<?php 
+
+namespace App\Services;
+
+use App\Repositories\UserRepository;
+
+class UserService
+{
+	protected UserRepository $userRepository;
+
+
+	public function __construct(UserRepository $userRepository)
+	{
+		$this->userRepository = $userRepository;
 	}
 }
 
