@@ -161,38 +161,42 @@ class UserRepository
 	protected $model;
 
 
+	/**
+	 * TODO: initialize $this->model to your model in order to repository works successfully
+	 * ... e.g.:  $this->model = User::class;
+	 */
 	public function __construct()
 	{
 	}
 
 
-	public function index()
+	public function all()
 	{
-		$this->model->all();
+		return $this->model->all();
 	}
 
 
-	public function store($data)
+	public function create($data)
 	{
-		$this->model->create($data);
+		return $this->model->create($data);
 	}
 
 
-	public function show($id)
+	public function find($id)
 	{
-		$this->model->findById($id);
+		return $this->model->find($id);
 	}
 
 
 	public function update($id, $data)
 	{
-		$this->model->where("id",$id)->update($data);
+		return $this->model->where("id",$id)->update($data);
 	}
 
 
-	public function destroy($id)
+	public function delete($id)
 	{
-		$this->model->where("id",$id)->delete();
+		return $this->model->where("id",$id)->delete();
 	}
 }
 
