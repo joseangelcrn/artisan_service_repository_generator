@@ -30,34 +30,38 @@ class RepositoryManager extends CreationManager
      */
     function generateCrudMethods()
     {
+        //Comment in
+        $this->getConstruct()->addComment('TODO: initialize $this->model to your model in order to repository works successfully');
+        $this->getConstruct()->addComment('... e.g.:  $this->model = User::class;');
+
         //Index
-        $index = $this->classBuilder->addMethod('index');
-        $index->setBody('$this->model->all();');
+        $index = $this->classBuilder->addMethod('all');
+        $index->setBody('return $this->model->all();');
         $index->setPublic();
 
         //Store
-        $store = $this->classBuilder->addMethod('store');
+        $store = $this->classBuilder->addMethod('create');
         $store->addParameter('data');
-        $store->setBody('$this->model->create($data);');
+        $store->setBody('return $this->model->create($data);');
         $store->setPublic();
 
         //Show
-        $show = $this->classBuilder->addMethod('show');
+        $show = $this->classBuilder->addMethod('find');
         $show->addParameter('id');
-        $show->setBody('$this->model->findById($id);');
+        $show->setBody('return $this->model->find($id);');
         $show->setPublic();
 
         //Update
         $update = $this->classBuilder->addMethod('update');
         $update->addParameter('id');
         $update->addParameter('data');
-        $update->setBody('$this->model->where("id",$id)->update($data);');
+        $update->setBody('return $this->model->where("id",$id)->update($data);');
         $update->setPublic();
 
         //Destroy
-        $destroy = $this->classBuilder->addMethod('destroy');
+        $destroy = $this->classBuilder->addMethod('delete');
         $destroy->addParameter('id');
-        $destroy->setBody('$this->model->where("id",$id)->delete();');
+        $destroy->setBody('return $this->model->where("id",$id)->delete();');
         $destroy->setPublic();
     }
 }
