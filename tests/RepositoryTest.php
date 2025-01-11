@@ -71,4 +71,14 @@ class RepositoryTest extends TestCase
             );
         }
     }
+
+    /**
+     * If command is executed with --crud option must be successfully executed.
+     * @return void
+     */
+    public function test_command_creates_single_repository_with_modules_disabled_with_opt_crud_must_success(): void
+    {
+        $repositoryName = $this->randomName();
+        $this->artisan("make:repository $repositoryName --crud")->assertOk();
+    }
 }

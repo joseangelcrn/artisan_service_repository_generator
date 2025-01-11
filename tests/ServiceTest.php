@@ -130,4 +130,23 @@ class ServiceTest extends TestCase
             );
         }
     }
+
+    /**
+     * If command is executed with --repositories_crud option must be successfully executed.
+     * @return void
+     */
+    public function test_command_creates_single_service_with_modules_disabled_with_opt_repositories_crud_must_success(): void
+    {
+        $serviceName = $this->randomName();
+        $repositoryNames =  [];
+
+        $nRepositories = rand(1,4);
+
+        for ($i = 0; $i < $nRepositories; $i++) {
+            $repositoryNames[] =  $this->randomName();
+        }
+        $repositoryNames = Arr::join($repositoryNames,',');
+
+        $this->artisan("make:service $serviceName --repositories-crud=$repositoryNames")->assertOk();
+    }
 }
