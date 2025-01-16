@@ -3,7 +3,7 @@
 namespace josanangel\tests;
 
 
-class RepositoryTest extends TestCase
+class RepositoryCommandTest extends TestCase
 {
 
     public function test_command_creates_single_repository_successfully(): void

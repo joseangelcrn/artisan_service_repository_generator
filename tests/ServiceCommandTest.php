@@ -5,7 +5,7 @@ namespace josanangel\tests;
 use Illuminate\Support\Arr;
 
 
-class ServiceTest extends TestCase
+class ServiceCommandTest extends TestCase
 {
 
     public function test_command_creates_single_service_successfully(): void
